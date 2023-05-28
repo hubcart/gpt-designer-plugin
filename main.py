@@ -1,56 +1,68 @@
-import json
+lets update this to have it print the url of the server where the app is running
 
-import quart
-import quart_cors
-from quart import request
+import openai
+from print_on_demand_plugin.api_integration import generate_design_image
 
-app = quart_cors.cors(quart.Quart(__name__), allow_origin="https://chat.openai.com")
+def start_plugin():
+    print("Welcome to the Print-on-Demand Design Plugin!")
+    print("Let's brainstorm some design ideas.")
 
-# Keep track of todo's. Does not persist if Python session is restarted.
-_TODOS = {}
+    # Initialize the GPT-3.5 model from OpenAI
+    openai.api_key = ''
 
-@app.post("/todos/<string:username>")
-async def add_todo(username):
-    request = await quart.request.get_json(force=True)
-    if username not in _TODOS:
-        _TODOS[username] = []
-    _TODOS[username].append(request["todo"])
-    return quart.Response(response='OK', status=200)
+    # Start the conversation loop
+    while True:
+        user_input = input("User: ")
 
-@app.get("/todos/<string:username>")
-async def get_todos(username):
-    return quart.Response(response=json.dumps(_TODOS.get(username, [])), status=200)
+        # Exit the plugin if the user enters "exit"
+        if user_input.lower() == "exit":
+            print("Exiting the plugin.")
+            break
 
-@app.delete("/todos/<string:username>")
-async def delete_todo(username):
-    request = await quart.request.get_json(force=True)
-    todo_idx = request["todo_idx"]
-    # fail silently, it's a simple plugin
-    if 0 <= todo_idx < len(_TODOS[username]):
-        _TODOS[username].pop(todo_idx)
-    return quart.Response(response='OK', status=200)
+        # Use the GPT-3.5 model to generate a response
+        response = openai.Completion.create(
+            engine="text-davinci-003",
+            prompt=user_input,
+            max_tokens=50,
+            n=1,
+            stop=None,
+            temperature=0.7
+        )
 
-@app.get("/logo.png")
-async def plugin_logo():
-    filename = 'logo.png'
-    return await quart.send_file(filename, mimetype='image/png')
+        # Extract the generated design idea from the response
+        design_idea = response.choices[0].text.strip()
 
-@app.get("/.well-known/ai-plugin.json")
-async def plugin_manifest():
-    host = request.headers['Host']
-    with open("./.well-known/ai-plugin.json") as f:
-        text = f.read()
-        return quart.Response(text, mimetype="text/json")
+        print(f"Plugin: {design_idea}")
 
-@app.get("/openapi.yaml")
-async def openapi_spec():
-    host = request.headers['Host']
-    with open("openapi.yaml") as f:
-        text = f.read()
-        return quart.Response(text, mimetype="text/yaml")
+        # Ask the user if they are ready to generate the design image
+        generate_image = input("Plugin: Are you ready to generate the design image? (yes/no): ")
 
-def main():
-    app.run(debug=True, host="0.0.0.0", port=5003)
+        if generate_image.lower() == "yes":
+            # Make the API call to generate the design image
+            image = generate_design_image(design_idea, width=512, height=512)
 
-if __name__ == "__main__":
-    main()
+            if image is not None:
+                # Display the generated image
+                print("Generated design image:")
+                print(image)
+
+                # Ask the user if they want to download or generate another image
+                decision = input("Plugin: What would you like to do? (download/generate another/exit): ")
+
+                if decision.lower() == "download":
+                    # TODO: Implement the logic to download the image
+                    print("Downloading the image...")
+                elif decision.lower() == "generate another":
+                    print("Generating another image...")
+                elif decision.lower() == "exit":
+                    print("Exiting the plugin.")
+                    break
+                else:
+                    print("Invalid option. Generating another image...")
+            else:
+                print("Error occurred during image generation.")
+        else:
+            print("Plugin: Let's continue brainstorming!")
+
+if __name__ == '__main__':
+    start_plugin()
