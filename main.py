@@ -1,15 +1,27 @@
 import json
-
 import quart
 import quart_cors
 from quart import request
 import openai
 from api_integration import generate_design_image
 
-app = quart_cors.cors(quart.Quart(__name__), allow_origin="https://chat.openai.com")
+app = quart_cors.cors(
+    quart.Quart(__name__),
+    allow_origin="https://chat.openai.com",
+    allow_methods=["GET", "POST", "OPTIONS"],
+    allow_headers=["Origin", "X-Requested-With", "Content-Type", "Accept"]
+)
 
 # Initialize the GPT-3.5 model from OpenAI
 openai.api_key = ''
+
+# Add CORS middleware before route handlers
+@app.before_request
+async def add_cors_headers():
+    quart.response.headers["Access-Control-Allow-Origin"] = "https://plugin.hubcart.ai"
+    quart.response.headers["Access-Control-Allow-Methods"] = "GET, POST, OPTIONS"
+    quart.response.headers["Access-Control-Allow-Headers"] = "Origin, X-Requested-With, Content-Type, Accept"
+
 
 @app.post("/designs")
 async def generate_design():
