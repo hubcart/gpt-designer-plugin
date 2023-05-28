@@ -30,7 +30,7 @@ def start_plugin():
         )
 
         # Extract the generated design idea from the response
-        design_idea = response.choices[0].text.strip()
+        design_idea = "print on demand design of a dog"
 
         print(f"Plugin: {design_idea}")
 
