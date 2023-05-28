@@ -1,5 +1,3 @@
-lets update this to have it print the url of the server where the app is running
-
 import openai
 from print_on_demand_plugin.api_integration import generate_design_image
 
