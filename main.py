@@ -10,7 +10,7 @@ app = quart.Quart(__name__)
 openai.api_key = ''
 
 # Define a decorator to add CORS headers to the responses
-def add_cors_headers(response):
+async def add_cors_headers(response):
     response.headers["Access-Control-Allow-Origin"] = "https://plugin.hubcart.ai"
     response.headers["Access-Control-Allow-Methods"] = "GET, POST, OPTIONS"
     response.headers["Access-Control-Allow-Headers"] = "Origin, X-Requested-With, Content-Type, Accept"
