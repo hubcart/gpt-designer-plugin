@@ -2,7 +2,7 @@
   "schema_version": "v1",
   "name_for_human": "HubCart Print-on-Demand Brainstormer",
   "name_for_model": "hubcart_brainstormer",
-  "description_for_human": "Generate creative print-on-demand design ideas with the HubCart Brainstormer plugin.",
+  "description_for_human": "Create POD design concepts with the HubCart Brainstormer plugin.",
   "description_for_model": "Plugin for generating print-on-demand design ideas using the HubCart Brainstormer.",
   "auth": {
     "type": "none"
