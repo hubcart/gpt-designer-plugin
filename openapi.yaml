@@ -4,7 +4,7 @@ info:
   description: API for generating print-on-demand design images with the HubCart Brainstormer plugin.
   version: 1.0.0
 servers:
-  - url: https://plugin.hubcart.ai:7860
+  - url: https://plugin.hubcart.ai
     description: Development server
 paths:
   /generate-image:
