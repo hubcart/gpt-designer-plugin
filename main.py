@@ -10,14 +10,14 @@ app = quart.Quart(__name__)
 openai.api_key = ''
 
 # Define a decorator to add CORS headers to the responses
-async def add_cors_headers(response):
+async def add_cors_headers_decorator(response):
     response.headers["Access-Control-Allow-Origin"] = "https://plugin.hubcart.ai"
     response.headers["Access-Control-Allow-Methods"] = "GET, POST, OPTIONS"
     response.headers["Access-Control-Allow-Headers"] = "Origin, X-Requested-With, Content-Type, Accept"
     return response
 
 @app.post("/designs")
-@add_cors_headers
+@add_cors_headers_decorator
 async def generate_design():
     request_data = await request.get_json(force=True)
     user_input = request_data.get("user_input")
@@ -38,7 +38,7 @@ async def generate_design():
     return quart.jsonify({"design_idea": design_idea})
 
 @app.post("/images")
-@add_cors_headers
+@add_cors_headers_decorator
 async def generate_image():
     request_data = await request.get_json(force=True)
     design_idea = request_data.get("design_idea")
@@ -53,7 +53,7 @@ async def generate_image():
         return quart.Response(response='Error occurred during image generation.', status=500)
 
 @app.get("/.well-known/ai-plugin.json")
-@add_cors_headers
+@add_cors_headers_decorator
 async def plugin_manifest():
     with open("./.well-known/ai-plugin.json") as f:
         text = f.read()
