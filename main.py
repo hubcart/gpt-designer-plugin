@@ -9,7 +9,7 @@ from api_integration import generate_design_image
 app = quart_cors.cors(quart.Quart(__name__), allow_origin="https://chat.openai.com")
 
 # Set your API key here
-API_KEY_FILE = "/api_key.txt"
+API_KEY_FILE = "api_key.txt"
 
 # Initialize the GPT-3.5 model from OpenAI
 openai.api_key = ""
