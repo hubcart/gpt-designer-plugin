@@ -1,5 +1,5 @@
 import openai
-from print_on_demand_plugin.api_integration import generate_design_image
+from api_integration import generate_design_image
 
 def start_plugin():
     print("Welcome to the Print-on-Demand Design Plugin!")
