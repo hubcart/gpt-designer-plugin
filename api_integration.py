@@ -1,7 +1,7 @@
 import requests
 
 def generate_design_image(prompt, width, height):
-    url = 'https://plugin.hubcart.ai:7860/sdapi/v1/txt2img'
+    url = 'https://plugin.hubcart.ai/sdapi/v1/txt2img'
 
     # Prepare the request payload
     payload = {
