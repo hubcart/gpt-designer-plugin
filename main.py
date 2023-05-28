@@ -1,23 +1,23 @@
 import json
+
 import quart
+import quart_cors
 from quart import request
 import openai
 from api_integration import generate_design_image
 
-app = quart.Quart(__name__)
+app = quart_cors.cors(quart.Quart(__name__), allow_origin="https://chat.openai.com")
 
 # Initialize the GPT-3.5 model from OpenAI
 openai.api_key = ''
 
-# Define a decorator to add CORS headers to the responses
-async def add_cors_headers_decorator(response):
+def add_cors_headers(response):
     response.headers["Access-Control-Allow-Origin"] = "https://plugin.hubcart.ai"
     response.headers["Access-Control-Allow-Methods"] = "GET, POST, OPTIONS"
     response.headers["Access-Control-Allow-Headers"] = "Origin, X-Requested-With, Content-Type, Accept"
     return response
 
-@app.post("/designs")
-@add_cors_headers_decorator
+@app.route("/designs", methods=["POST"])
 async def generate_design():
     request_data = await request.get_json(force=True)
     user_input = request_data.get("user_input")
@@ -35,10 +35,9 @@ async def generate_design():
     # Extract the generated design idea from the response
     design_idea = "print on demand design of a dog"
 
-    return quart.jsonify({"design_idea": design_idea})
+    return add_cors_headers(quart.jsonify({"design_idea": design_idea}))
 
-@app.post("/images")
-@add_cors_headers_decorator
+@app.route("/images", methods=["POST"])
 async def generate_image():
     request_data = await request.get_json(force=True)
     design_idea = request_data.get("design_idea")
@@ -48,16 +47,15 @@ async def generate_image():
 
     if image is not None:
         # Return the generated image
-        return await quart.send_file(image, mimetype='image/png')
+        return add_cors_headers(await quart.send_file(image, mimetype='image/png'))
     else:
-        return quart.Response(response='Error occurred during image generation.', status=500)
+        return add_cors_headers(quart.Response(response='Error occurred during image generation.', status=500))
 
-@app.get("/.well-known/ai-plugin.json")
-@add_cors_headers_decorator
+@app.route("/.well-known/ai-plugin.json", methods=["GET"])
 async def plugin_manifest():
     with open("./.well-known/ai-plugin.json") as f:
         text = f.read()
-        return quart.Response(text, mimetype="text/json")
+        return add_cors_headers(quart.Response(text, mimetype="text/json"))
 
 def main():
     app.run(debug=True, host="0.0.0.0", port=5000)
