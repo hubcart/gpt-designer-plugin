@@ -3,18 +3,28 @@ import quart
 import quart_cors
 from quart import request
 
-app = quart_cors.cors(quart.Quart(__name__), allow_origin="https://chat.openai.com")
+app = quart_cors.cors(quart.Quart(__name__), allow_origin="*")  # Allow requests from any origin for browser access
 
 # Keep track of user information. Does not persist if Python session is restarted.
 USERS = {}
 
-@app.get("/user/")
+@app.route("/user/", methods=["GET"])
 async def get_user():
     # Make the API call to retrieve user information
     # Replace this with your actual API call implementation
     # For simplicity, this example returns a static response
     response = "User information"
-    return quart.Response(response=response, status=200)
+    
+    # Check if the request is coming from a browser or SSH
+    user_agent = request.headers.get("User-Agent")
+    is_browser_request = "Mozilla" in user_agent or "Chrome" in user_agent
+    
+    if is_browser_request:
+        # Return a JSON response for browser access
+        return quart.jsonify({"response": response})
+    else:
+        # Return a plain text response for SSH access
+        return quart.Response(response=response, status=200, content_type="text/plain")
 
 @app.get("/logo.png")
 async def plugin_logo():
