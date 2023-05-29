@@ -9,7 +9,7 @@ app = quart_cors.cors(quart.Quart(__name__), allow_origin="https://chat.openai.c
 async def create_design(prompt):
     url = "https://try.hubcart.ai:8001/sdapi/v1/txt2img"
     headers = {"accept": "application/json", "Content-Type": "application/json"}
-    data = {"prompt": prompt}
+    data = {"prompt": prompt, "send_images": False, "save_images": True}
 
     async with aiohttp.ClientSession() as session:
         async with session.post(url, headers=headers, json=data) as response:
