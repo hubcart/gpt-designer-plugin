@@ -50,5 +50,9 @@ async def openapi_spec():
     with open("openapi.yaml") as f:
         text = f.read()
         return quart.Response(text, mimetype="text/yaml")
+
+def main():
+    app.run(debug=True, host="0.0.0.0", port=5003)
+
 if __name__ == "__main__":
-    app.run()
+    main()
