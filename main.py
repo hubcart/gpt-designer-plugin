@@ -1,30 +1,24 @@
 import json
+
 import quart
 import quart_cors
 from quart import request
 
-app = quart_cors.cors(quart.Quart(__name__), allow_origin="*")  # Allow requests from any origin for browser access
+app = quart_cors.cors(quart.Quart(__name__), allow_origin="https://chat.openai.com")
 
-# Keep track of user information. Does not persist if Python session is restarted.
-USERS = {}
-
-@app.route("/user/", methods=["GET"])
+@app.get("/user/")
 async def get_user():
-    # Make the API call to retrieve user information
-    # Replace this with your actual API call implementation
-    # For simplicity, this example returns a static response
-    response = "User information"
-    
-    # Check if the request is coming from a browser or SSH
-    user_agent = request.headers.get("User-Agent")
-    is_browser_request = "Mozilla" in user_agent or "Chrome" in user_agent
-    
-    if is_browser_request:
-        # Return a JSON response for browser access
-        return quart.jsonify({"response": response})
-    else:
-        # Return a plain text response for SSH access
-        return quart.Response(response=response, status=200, content_type="text/plain")
+    url = "https://try.hubcart.ai:8001/user/"
+    headers = {"accept": "application/json"}
+
+    try:
+        response = await quart.httpclient.get(url, headers=headers)
+        if response.status_code == 200:
+            return quart.Response(response=response.text, status=200)
+        else:
+            return quart.Response(response="Failed to retrieve user information", status=response.status_code)
+    except Exception as e:
+        return quart.Response(response="Error occurred during API call: " + str(e), status=500)
 
 @app.get("/logo.png")
 async def plugin_logo():
@@ -33,14 +27,12 @@ async def plugin_logo():
 
 @app.get("/.well-known/ai-plugin.json")
 async def plugin_manifest():
-    host = request.headers['Host']
     with open("./.well-known/ai-plugin.json") as f:
         text = f.read()
         return quart.Response(text, mimetype="text/json")
 
 @app.get("/openapi.yaml")
 async def openapi_spec():
-    host = request.headers['Host']
     with open("openapi.yaml") as f:
         text = f.read()
         return quart.Response(text, mimetype="text/yaml")
