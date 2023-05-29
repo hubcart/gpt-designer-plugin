@@ -1,7 +1,7 @@
 {
   "schema_version": "v1",
-  "name_for_human": "Print On Demand Design Brainstorming",
-  "name_for_model": "pod_design_brainstorm",
+  "name_for_human": "POD Designer",
+  "name_for_model": "pod_designer",
   "description_for_human": "Brainstorms print on demand design ideas and creates designs based on user input.",
   "description_for_model": "This plugin engages in intuitive conversation with the user to brainstorm print on demand design ideas. The AI suggests design concepts based on user input and asks if they would like a design to be created.",
   "auth": {
