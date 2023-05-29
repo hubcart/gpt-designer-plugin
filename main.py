@@ -2,7 +2,7 @@ import json
 import aiohttp
 import quart
 import quart_cors
-from quart import request
+from quart import request, stream
 
 app = quart_cors.cors(quart.Quart(__name__), allow_origin="https://chat.openai.com")
 
@@ -14,7 +14,11 @@ async def create_design(prompt):
     async with aiohttp.ClientSession() as session:
         async with session.post(url, headers=headers, json=data) as response:
             if response.status == 200:
-                return await response.json()
+                # Enable chunked transfer encoding
+                response.enable_chunked_encoding()
+                async with stream(response) as resp_stream:
+                    async for chunk in resp_stream.iter_any():
+                        yield chunk
             else:
                 return None
 
@@ -25,11 +29,11 @@ async def handle_create_design():
         prompt = data.get("prompt")
 
         if prompt:
-            design_info = await create_design(prompt)
-            if design_info:
-                return quart.Response(response=json.dumps(design_info), status=200)
-            else:
-                return quart.Response(response="Failed to create the design", status=500)
+            async def generate_chunks():
+                async for chunk in create_design(prompt):
+                    yield chunk
+
+            return quart.Response(stream_with_context(generate_chunks()), status=200, content_type="application/json")
         else:
             return quart.Response(response="Invalid request payload", status=400)
     except Exception as e:
