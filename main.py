@@ -1,39 +1,42 @@
-import json
+iimport json
+import asyncio
 import aiohttp
 import quart
 import quart_cors
-from quart import request
+from quart import request, Response
 
 app = quart_cors.cors(quart.Quart(__name__), allow_origin="https://chat.openai.com")
 
 async def create_design(prompt):
-    url = "https://try.hubcart.ai/sdapi/v1/txt2img"  # API endpoint for creating designs
-    headers = {"accept": "application/json", "Content-Type": "application/json"}  # Request headers
-    data = {"prompt": prompt}  # Request payload with the prompt
-
-    async with aiohttp.ClientSession() as session:
-        async with session.post(url, headers=headers, json=data) as response:
-            if response.status == 200:  # If the API call is successful
-                return await response.json()  # Return the design information in JSON format
-            else:
-                return None  # Return None if the API call fails
+    # Your design creation logic here
+    # Return the design information or image as a string
 
 @app.post("/create-design")
 async def handle_create_design():
     try:
-        data = await request.json  # Extract the request payload
-        prompt = data.get("prompt")  # Get the prompt from the payload
+        data = await request.json
+        prompt = data.get("prompt")
 
-        if prompt:  # If a valid prompt is provided
-            design_info = await create_design(prompt)  # Create the design using the prompt
-            if design_info:  # If the design is created successfully
-                return quart.Response(response=json.dumps(design_info), status=200)  # Return the design information as JSON
+        if prompt:
+            design_info = await create_design(prompt)
+            if design_info:
+                # Chunked Transfer-Encoding implementation
+                async def stream_response():
+                    # Split the response into smaller chunks
+                    chunk_size = 4096
+                    for i in range(0, len(design_info), chunk_size):
+                        chunk = design_info[i:i+chunk_size]
+                        yield chunk
+                        await asyncio.sleep(0.1)  # Optional delay to control chunk rate
+
+                headers = {"Content-Type": "text/plain", "Transfer-Encoding": "chunked"}
+                return Response(stream_response(), headers=headers)
             else:
-                return quart.Response(response="Failed to create the design", status=500)  # Return an error message if the design creation fails
+                return quart.Response(response="Failed to create the design", status=500)
         else:
-            return quart.Response(response="Invalid request payload", status=400)  # Return an error message for an invalid request payload
+            return quart.Response(response="Invalid request payload", status=400)
     except Exception as e:
-        return quart.Response(response="Error occurred during API call: " + str(e), status=500)  # Return an error message for any exceptions during the API call
+        return quart.Response(response="Error occurred during API call: " + str(e), status=500)
 
 @app.get("/logo.png")
 async def plugin_logo():
