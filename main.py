@@ -1,12 +1,13 @@
-import aiohttp
 import json
+import aiohttp
 import quart
+import quart_cors
+from quart import request
 
-app = quart.Quart(__name__)
+app = quart_cors.cors(quart.Quart(__name__), allow_origin="https://chat.openai.com")
 
-# Asynchronously creates a design based on the provided prompt
 async def create_design(prompt):
-    url = "https://try.hubcart.ai:8001"  # API endpoint for creating designs
+    url = "https://try.hubcart.ai:8001/sdapi/v1/txt2img"  # API endpoint for creating designs
     headers = {"accept": "application/json", "Content-Type": "application/json"}  # Request headers
     data = {"prompt": prompt}  # Request payload with the prompt
 
@@ -17,8 +18,7 @@ async def create_design(prompt):
             else:
                 return None  # Return None if the API call fails
 
-# HTTP POST endpoint to handle the creation of a design
-@app.post("/sdapi/v1/txt2img")
+@app.post("/create-design")
 async def handle_create_design():
     try:
         data = await request.json  # Extract the request payload
@@ -34,6 +34,7 @@ async def handle_create_design():
             return quart.Response(response="Invalid request payload", status=400)  # Return an error message for an invalid request payload
     except Exception as e:
         return quart.Response(response="Error occurred during API call: " + str(e), status=500)  # Return an error message for any exceptions during the API call
+
 @app.get("/logo.png")
 async def plugin_logo():
     filename = 'logo.png'
