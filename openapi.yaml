@@ -2,114 +2,39 @@ openapi: 3.0.1
 info:
   title: ChatGPT Plugin API
   version: 1.0.0
-  description: A simple ChatGPT plugin that retrieves user information from the API.
+  description: A simple ChatGPT plugin for designing images.
 servers:
-  - url: https://try.hubcart.ai
+  - url: https://try.hubcart.ai:8001
 paths:
-  /user/:
-    get:
-      summary: Retrieve User Information
-      description: Retrieves user information from the API.
-      operationId: getUserInfo
+  /txt2img/:
+    post:
+      summary: Generate Image from Text
+      description: Generates an image based on the provided text prompt.
+      operationId: generateImageFromText
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Txt2ImgRequest'
       responses:
         '200':
           description: Successful response
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/UserResponse'
-        '404':
-          description: User not found
+                $ref: '#/components/schemas/ImageResponse'
         '500':
           description: Internal server error
 components:
   schemas:
-    UserResponse:
+    Txt2ImgRequest:
       type: object
       properties:
-        enable_hr:
-          type: boolean
-        denoising_strength:
-          type: integer
-        firstphase_width:
-          type: integer
-        firstphase_height:
-          type: integer
-        hr_scale:
-          type: integer
-        hr_upscaler:
-          type: null
-        hr_second_pass_steps:
-          type: integer
-        hr_resize_x:
-          type: integer
-        hr_resize_y:
-          type: integer
         prompt:
           type: string
-        styles:
-          type: null
-        seed:
-          type: integer
-        subseed:
-          type: integer
-        subseed_strength:
-          type: integer
-        seed_resize_from_h:
-          type: integer
-        seed_resize_from_w:
-          type: integer
-        sampler_name:
-          type: null
-        batch_size:
-          type: integer
-        n_iter:
-          type: integer
-        steps:
-          type: integer
-        cfg_scale:
-          type: integer
-        width:
-          type: integer
-        height:
-          type: integer
-        restore_faces:
-          type: boolean
-        tiling:
-          type: boolean
-        do_not_save_samples:
-          type: boolean
-        do_not_save_grid:
-          type: boolean
-        negative_prompt:
-          type: null
-        eta:
-          type: null
-        s_min_uncond:
-          type: integer
-        s_churn:
-          type: integer
-        s_tmax:
-          type: null
-        s_tmin:
-          type: integer
-        s_noise:
-          type: integer
-        override_settings:
-          type: null
-        override_settings_restore_afterwards:
-          type: boolean
-        script_args:
-          type: array
-          items:
-            type: string
-        sampler_index:
+    ImageResponse:
+      type: object
+      properties:
+        image_url:
           type: string
-        script_name:
-          type: null
-        send_images:
-          type: boolean
-        save_images:
-          type: boolean
-        alwayson_scripts:
-          type: object
