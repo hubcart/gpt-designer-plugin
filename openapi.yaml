@@ -22,4 +22,9 @@ paths:
           description: User not found
         '500':
           description: Internal server error
-components: {}
+components:
+  schemas:
+    UserResponse:
+      type: string
+      description: The user information.
+
