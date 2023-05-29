@@ -13,5 +13,6 @@
   },
   "logo_url": "https://try.hubcart.ai/logo.png",
   "contact_email": "cs@hubcart.ai",
-  "legal_info_url": "https://try.hubcart.ai/legal"
+  "legal_info_url": "https://try.hubcart.ai/legal",
+  "send_images": false
 }
