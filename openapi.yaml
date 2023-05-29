@@ -23,7 +23,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ImageResponse'
+                $ref: '#/components/schemas/SeedResponse'
         '500':
           description: Internal server error
 components:
@@ -33,8 +33,8 @@ components:
       properties:
         prompt:
           type: string
-    ImageResponse:
+    SeedResponse:
       type: object
       properties:
-        image_url:
+        seed:
           type: string
