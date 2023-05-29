@@ -33,6 +33,10 @@ components:
       properties:
         prompt:
           type: string
+        send_images:
+          type: boolean
+        save_images:
+          type: boolean
     SeedResponse:
       type: object
       properties:
