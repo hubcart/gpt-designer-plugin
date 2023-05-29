@@ -34,6 +34,21 @@ async def handle_create_design():
             return quart.Response(response="Invalid request payload", status=400)  # Return an error message for an invalid request payload
     except Exception as e:
         return quart.Response(response="Error occurred during API call: " + str(e), status=500)  # Return an error message for any exceptions during the API call
+@app.get("/logo.png")
+async def plugin_logo():
+    filename = 'logo.png'
+    return await quart.send_file(filename, mimetype='image/png')
 
+@app.get("/.well-known/ai-plugin.json")
+async def plugin_manifest():
+    with open("./.well-known/ai-plugin.json") as f:
+        text = f.read()
+        return quart.Response(text, mimetype="text/json")
+
+@app.get("/openapi.yaml")
+async def openapi_spec():
+    with open("openapi.yaml") as f:
+        text = f.read()
+        return quart.Response(text, mimetype="text/yaml")
 if __name__ == "__main__":
     app.run()
