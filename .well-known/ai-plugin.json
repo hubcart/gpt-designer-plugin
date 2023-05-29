@@ -9,7 +9,7 @@
   },
   "api": {
     "type": "openapi",
-    "url": "https://try.hubcart.ai/user/openapi.yaml"
+    "url": "https://try.hubcart.ai/openapi.yaml"
   },
   "logo_url": "https://example.com/logo.png",
   "contact_email": "contact@example.com",
