@@ -7,25 +7,32 @@ from quart import request
 
 app = quart_cors.cors(quart.Quart(__name__), allow_origin="https://chat.openai.com")
 
-async def fetch_user():
-    url = "https://try.hubcart.ai:8001"  # Update the URL with the desired port number
-    headers = {"accept": "application/json"}
+async def create_design(prompt):
+    url = "https://try.hubcart.ai:8001/sdapi/v1/txt2img"
+    headers = {"accept": "application/json", "Content-Type": "application/json"}
+    data = {"prompt": prompt}
 
     async with aiohttp.ClientSession() as session:
-        async with session.get(url, headers=headers) as response:
+        async with session.post(url, headers=headers, json=data) as response:
             if response.status == 200:
-                return await response.text()
+                return await response.json()
             else:
                 return None
 
-@app.get("/user/")
-async def get_user():
+@app.post("/create-design")
+async def handle_create_design():
     try:
-        user_info = await fetch_user()
-        if user_info:
-            return quart.Response(response=user_info, status=200)
+        data = await request.json
+        prompt = data.get("prompt")
+
+        if prompt:
+            design_info = await create_design(prompt)
+            if design_info:
+                return quart.Response(response=json.dumps(design_info), status=200)
+            else:
+                return quart.Response(response="Failed to create the design", status=500)
         else:
-            return quart.Response(response="Failed to retrieve user information", status=500)
+            return quart.Response(response="Invalid request payload", status=400)
     except Exception as e:
         return quart.Response(response="Error occurred during API call: " + str(e), status=500)
 
