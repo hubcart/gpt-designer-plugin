@@ -5,7 +5,7 @@ import quart
 import quart_cors
 from quart import request
 
-app = quart_cors.cors(quart.Quart(__name__), allow_origin="*")
+app = quart_cors.cors(quart.Quart(__name__), allow_origin="https://chat.openai.com")
 
 async def fetch_user():
     url = "https://try.hubcart.ai/user/"
