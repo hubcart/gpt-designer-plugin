@@ -47,7 +47,7 @@ async def openapi_spec():
         return quart.Response(text, mimetype="text/yaml")
 
 def main():
-    app.run(debug=True, host="try.hubcart.ai", port=443, path="/")
+    app.run(debug=True, host="try.hubcart.ai", port=443, path="/plugin")
 
 if __name__ == "__main__":
     main()
