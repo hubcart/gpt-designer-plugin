@@ -22,8 +22,6 @@ async def create_design(prompt):
                         if not chunk:
                             break
                         yield chunk
-            else:
-                return None
 
 @app.post("/create-design")
 async def handle_create_design():
