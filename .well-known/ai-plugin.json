@@ -1,17 +1,17 @@
 {
   "schema_version": "v1",
-  "name_for_human": "HubCart POD Designer",
-  "name_for_model": "hubcart_brainstormer",
-  "description_for_human": "POD Concept Designer plugin.",
-  "description_for_model": "Plugin for generating print-on-demand design ideas using the HubCart Brainstormer.",
+  "name_for_human": "Get User API",
+  "name_for_model": "get_user",
+  "description_for_human": "Retrieve user information from the API.",
+  "description_for_model": "Plugin for retrieving user information from an external API.",
   "auth": {
     "type": "none"
   },
   "api": {
     "type": "openapi",
-    "url": "https://plugin.hubcart.ai/openapi.yaml"
+    "url": "https://try.hubcart.ai:8001/openapi.yaml"
   },
-  "logo_url": "http://plugin.hubcart.ai/logo.png",
-  "contact_email": "your-email@example.com",
-  "legal_info_url": "http://example.com/legal"
+  "logo_url": "https://example.com/logo.png",
+  "contact_email": "contact@example.com",
+  "legal_info_url": "https://example.com/legal"
 }
