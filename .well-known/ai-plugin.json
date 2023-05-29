@@ -3,13 +3,13 @@
   "name_for_human": "Get User API",
   "name_for_model": "get_user",
   "description_for_human": "Retrieve user information from the API.",
-  "description_for_model": "Plugin for retrieving user information from an external API.",
+  "description_for_model": "Plugin for retrieving user information from an external API. Prompt the user to retrieve user information by mentioning or asking about user details, e.g., 'Can you get me the user information?' or 'What is the user's name?'",
   "auth": {
     "type": "none"
   },
   "api": {
     "type": "openapi",
-    "url": "https://try.hubcart.ai:8001/openapi.yaml"
+    "url": "https://try.hubcart.ai/user/openapi.yaml"
   },
   "logo_url": "https://example.com/logo.png",
   "contact_email": "contact@example.com",
