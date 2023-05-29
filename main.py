@@ -22,17 +22,13 @@ async def create_design(prompt):
 @app.post("/create-design")
 async def handle_create_design():
     try:
-        data = await request.json
-        prompt = data.get("prompt")
+        prompt = "Design a retro/vintage Father's Day card featuring an old 1968 Pontiac GTO that is red. Include a heartfelt message like 'Happy Father's Day, Dad!'"
 
-        if prompt:
-            design_info = await create_design(prompt)
-            if design_info:
-                return quart.Response(response=json.dumps(design_info), status=200)
-            else:
-                return quart.Response(response="Failed to create the design", status=500)
+        design_info = await create_design(prompt)
+        if design_info:
+            return quart.Response(response=json.dumps(design_info), status=200)
         else:
-            return quart.Response(response="Invalid request payload", status=400)
+            return quart.Response(response="Failed to create the design", status=500)
     except Exception as e:
         return quart.Response(response="Error occurred during API call: " + str(e), status=500)
 
