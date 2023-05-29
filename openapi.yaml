@@ -4,13 +4,13 @@ info:
   version: 1.0.0
   description: A simple ChatGPT plugin that retrieves user information from the API.
 servers:
-  - url: https://try.hubcart.ai/
+  - url: https://try.hubcart.ai:8001
 paths:
   /user/:
     get:
       summary: Retrieve User Information
-      description: |
-        Retrieves user information from the API.
+      description: Retrieves user information from the API.
+      operationId: getUserInfo
       responses:
         '200':
           description: Successful response
