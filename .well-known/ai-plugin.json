@@ -1,9 +1,9 @@
 {
   "schema_version": "v1",
-  "name_for_human": "Get User API",
-  "name_for_model": "get_user",
-  "description_for_human": "Retrieve user information from the API.",
-  "description_for_model": "Plugin for retrieving user information from an external API. Prompt the user to retrieve user information by mentioning or asking about user details, e.g., 'Can you get me the user information?' or 'What is the user's name?'",
+  "name_for_human": "Print On Demand Design Brainstorming",
+  "name_for_model": "pod_design_brainstorm",
+  "description_for_human": "Brainstorms print on demand design ideas and creates designs based on user input.",
+  "description_for_model": "This plugin engages in intuitive conversation with the user to brainstorm print on demand design ideas. The AI suggests design concepts based on user input and asks if they would like a design to be created.",
   "auth": {
     "type": "none"
   },
@@ -11,7 +11,7 @@
     "type": "openapi",
     "url": "https://try.hubcart.ai/openapi.yaml"
   },
-  "logo_url": "https://example.com/logo.png",
-  "contact_email": "contact@example.com",
-  "legal_info_url": "https://example.com/legal"
+  "logo_url": "https://try.hubcart.ai/logo.png",
+  "contact_email": "cs@hubcart.ai",
+  "legal_info_url": "https://try.hubcart.ai/legal"
 }
