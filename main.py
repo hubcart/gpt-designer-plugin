@@ -2,6 +2,8 @@ import aiohttp
 import json
 import quart
 
+app = quart.Quart(__name__)
+
 # Asynchronously creates a design based on the provided prompt
 async def create_design(prompt):
     url = "https://try.hubcart.ai:8001"  # API endpoint for creating designs
@@ -32,3 +34,6 @@ async def handle_create_design():
             return quart.Response(response="Invalid request payload", status=400)  # Return an error message for an invalid request payload
     except Exception as e:
         return quart.Response(response="Error occurred during API call: " + str(e), status=500)  # Return an error message for any exceptions during the API call
+
+if __name__ == "__main__":
+    app.run()
