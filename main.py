@@ -8,7 +8,7 @@ from quart import request
 app = quart_cors.cors(quart.Quart(__name__), allow_origin="https://chat.openai.com")
 
 async def fetch_user():
-    url = "https://try.hubcart.ai:8001/user/"  # Update the URL with the desired port number
+    url = "https://try.hubcart.ai:8001"  # Update the URL with the desired port number
     headers = {"accept": "application/json"}
 
     async with aiohttp.ClientSession() as session:
