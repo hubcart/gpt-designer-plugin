@@ -1,57 +1,21 @@
 openapi: 3.0.0
 info:
-  title: HubCart Print-on-Demand Brainstormer API
-  description: API for generating print-on-demand design images with the HubCart Brainstormer plugin.
+  title: ChatGPT Plugin API
   version: 1.0.0
-servers:
-  - url: https://plugin.hubcart.ai
-    description: Development server
 paths:
-  /generate-image:
-    post:
-      summary: Generate a print-on-demand design image
-      description: Generates a print-on-demand design image using the HubCart API.
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                prompt:
-                  type: string
-                  description: The prompt for generating the design image.
-              required:
-                - prompt
+  /user/:
+    get:
+      summary: Retrieve User Information
+      description: |
+        Retrieves user information from the API.
       responses:
         '200':
-          description: Successful operation
+          description: Successful response
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  image:
-                    type: string
-                    format: binary
-                    description: The generated print-on-demand design image.
-        '400':
-          description: Invalid request
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  error:
-                    type: string
-                    description: Error message indicating the cause of the invalid request.
+                type: string
+        '404':
+          description: User not found
         '500':
           description: Internal server error
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  error:
-                    type: string
-                    description: Error message indicating an internal server error.
