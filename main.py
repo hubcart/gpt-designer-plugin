@@ -2,7 +2,7 @@ import json
 import aiohttp
 import quart
 import quart_cors
-from quart import request, stream
+from quart import request, stream_with_context
 
 app = quart_cors.cors(quart.Quart(__name__), allow_origin="https://chat.openai.com")
 
@@ -16,8 +16,11 @@ async def create_design(prompt):
             if response.status == 200:
                 # Enable chunked transfer encoding
                 response.enable_chunked_encoding()
-                async with stream(response) as resp_stream:
-                    async for chunk in resp_stream.iter_any():
+                async with response:
+                    while True:
+                        chunk = await response.content.read(4096)
+                        if not chunk:
+                            break
                         yield chunk
             else:
                 return None
