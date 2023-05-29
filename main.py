@@ -1,4 +1,5 @@
 import json
+import aiohttp
 
 import quart
 import quart_cors
@@ -6,17 +7,25 @@ from quart import request
 
 app = quart_cors.cors(quart.Quart(__name__), allow_origin="https://chat.openai.com")
 
-@app.get("/user/")
-async def get_user():
+async def fetch_user():
     url = "https://try.hubcart.ai:8001/user/"
     headers = {"accept": "application/json"}
 
+    async with aiohttp.ClientSession() as session:
+        async with session.get(url, headers=headers) as response:
+            if response.status == 200:
+                return await response.text()
+            else:
+                return None
+
+@app.get("/user/")
+async def get_user():
     try:
-        response = await quart.httpclient.get(url, headers=headers)
-        if response.status_code == 200:
-            return quart.Response(response=response.text, status=200)
+        user_info = await fetch_user()
+        if user_info:
+            return quart.Response(response=user_info, status=200)
         else:
-            return quart.Response(response="Failed to retrieve user information", status=response.status_code)
+            return quart.Response(response="Failed to retrieve user information", status=500)
     except Exception as e:
         return quart.Response(response="Error occurred during API call: " + str(e), status=500)
 
