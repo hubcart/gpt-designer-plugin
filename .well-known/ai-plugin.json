@@ -2,8 +2,8 @@
   "schema_version": "v1",
   "name_for_human": "POD Designer",
   "name_for_model": "pod_designer",
-  "description_for_human": "Brainstorms print on demand design ideas and creates designs based on user input.",
-  "description_for_model": "This plugin engages in intuitive conversation with the user to brainstorm print on demand design ideas. The AI suggests design concepts based on user input and asks if they would like a design to be created.",
+  "description_for_human": "Brainstorms print on{SEED}sign where {SEED} is replacedw with the seed. ideas and creates designs based on user input.",
+  "description_for_model": "This plugin engages in intuitive conversation with the user to brainstorm print on demand design ideas. The AI suggests design concepts based on user input and asks if they would like a design to be created. We want to make sure the image does not send becuase it's a base64 image and creates too long of a response. in the api call response. Instead we want to save the base 64 image and the seed so that we can retrieve the image as a png and display that. the url to display the image is https://try.hubcart.ai:8001/file=/home/ec2-user/stable-diffusion-webui/outputs/txt2img-images/{SEED}.png where {SEED} is replacedw with the seed.",
   "auth": {
     "type": "none"
   },
