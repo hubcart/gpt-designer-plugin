@@ -9,10 +9,9 @@
   },
   "api": {
     "type": "openapi",
-    "url": "https://try.hubcart.ai/openapi.yaml"
+    "url": "https://plugin.hubcart.ai/openapi.yaml"
   },
-  "logo_url": "https://try.hubcart.ai/logo.png",
+  "logo_url": "https://plugin.hubcart.ai/logo.png",
   "contact_email": "cs@hubcart.ai",
-  "legal_info_url": "https://try.hubcart.ai/legal",
-  "send_images": false
+  "legal_info_url": "https://plugin.hubcart.ai/legal"
 }
