@@ -7,7 +7,7 @@ from quart import request
 app = quart_cors.cors(quart.Quart(__name__), allow_origin="https://chat.openai.com")
 
 async def create_design(prompt):
-    url = "https://try.hubcart.ai:8001/sdapi/v1/txt2img"
+    url = "https://plugin.hubcart.ai:8001/sdapi/v1/txt2img"
     headers = {"accept": "application/json", "Content-Type": "application/json"}
     data = {
         "prompt": prompt,
