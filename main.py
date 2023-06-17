@@ -7,23 +7,19 @@ from quart import request
 app = quart_cors.cors(quart.Quart(__name__), allow_origin="https://chat.openai.com")
 
 async def create_design(prompt):
-    url = "https://api.openai.com/v1/images/generations"
+    url = "https://try.hubcart.ai/images/generations"  # Updated API endpoint
     headers = {
         "Content-Type": "application/json",
-        "Authorization": "Bearer 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"
     }
     data = {
         "prompt": prompt,
-        "n": 1,
-        "size": "256x256",
-        "response_format": "url"
     }
 
     async with aiohttp.ClientSession() as session:
         async with session.post(url, headers=headers, json=data) as response:
             if response.status == 200:
                 response_json = await response.json()
-                image_url = response_json["data"][0]["url"]
+                image_url = response_json["image_url"]
                 return {"image_url": image_url}
             else:
                 return None
