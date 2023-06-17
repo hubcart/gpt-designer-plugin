@@ -2,7 +2,7 @@ openapi: 3.0.1
 info:
   title: ChatGPT Plugin API
   version: 1.0.0
-  description: A simple ChatGPT plugin for designing images.
+  description: A simple plugin for designing images.
 servers:
   - url: https://app.try.hubcart.ai
 paths:
