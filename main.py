@@ -8,9 +8,12 @@ app = quart_cors.cors(quart.Quart(__name__), allow_origin="https://chat.openai.c
 
 async def create_design(prompt):
     url = "https://api.openai.com/v1/images/generations"
+    with open("api-key.txt") as f:
+        api_key = f.read().strip()
+
     headers = {
         "Content-Type": "application/json",
-        "Authorization": "Bearer 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"
+        "Authorization": f"Bearer {api_key}"
     }
     data = {
         "prompt": prompt,
