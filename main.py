@@ -1,9 +1,11 @@
 import json
 import aiohttp
 import quart
-from quart import request, jsonify
+import quart_cors
+from quart import request
 
 app = quart.Quart(__name__)
+app = quart_cors.CORS(app, allow_origin="https://try.hubcart.ai")
 
 async def create_design(prompt):
     url = "https://api.openai.com/v1/images/generations"
@@ -31,18 +33,8 @@ def get_api_key():
     with open("api-key.txt", "r") as f:
         return f.read().strip()
 
-@app.after_request
-async def add_cors_headers(response):
-    response.headers["Access-Control-Allow-Origin"] = "https://chat.openai.com"
-    response.headers["Access-Control-Allow-Headers"] = "Content-Type, Authorization"
-    response.headers["Access-Control-Allow-Methods"] = "GET, POST, OPTIONS"
-    return response
-
-@app.route("/create-design", methods=["POST", "OPTIONS"])
+@app.route("/create-design", methods=["POST"])
 async def handle_create_design():
-    if request.method == "OPTIONS":
-        return jsonify({"message": "OK"}), 200
-
     try:
         data = await request.json
         prompt = data.get("prompt")
@@ -50,30 +42,30 @@ async def handle_create_design():
         if prompt:
             design_info = await create_design(prompt)
             if design_info:
-                return jsonify(design_info), 200
+                return quart.jsonify(design_info)
             else:
-                return jsonify({"message": "Failed to create the design"}), 500
+                return "Failed to create the design", 500
         else:
-            return jsonify({"message": "Invalid request payload"}), 400
+            return "Invalid request payload", 400
     except Exception as e:
-        return jsonify({"message": "Error occurred during API call: " + str(e)}), 500
+        return f"Error occurred during API call: {str(e)}", 500
 
-@app.route("/logo.png", methods=["GET"])
+@app.route("/logo.png")
 async def plugin_logo():
-    filename = "logo.png"
-    return await quart.send_file(filename, mimetype="image/png")
+    filename = 'logo.png'
+    return await quart.send_file(filename, mimetype='image/png')
 
-@app.route("/.well-known/ai-plugin.json", methods=["GET"])
+@app.route("/.well-known/ai-plugin.json")
 async def plugin_manifest():
     with open("./.well-known/ai-plugin.json") as f:
         text = f.read()
-        return text, 200, {"Content-Type": "text/json"}
+        return text, {"Content-Type": "text/json"}
 
-@app.route("/openapi.yaml", methods=["GET"])
+@app.route("/openapi.yaml")
 async def openapi_spec():
     with open("openapi.yaml") as f:
         text = f.read()
-        return text, 200, {"Content-Type": "text/yaml"}
+        return text, {"Content-Type": "text/yaml"}
 
 def main():
     app.run(debug=True, host="0.0.0.0", port=5003)
