@@ -4,14 +4,13 @@ import quart
 import quart_cors
 from quart import request
 
-app = quart.Quart(__name__)
-app = quart_cors.CORS(app, allow_origin="https://try.hubcart.ai")
+app = quart_cors.cors(quart.Quart(__name__), allow_origin="https://chat.openai.com")
 
 async def create_design(prompt):
     url = "https://api.openai.com/v1/images/generations"
     headers = {
         "Content-Type": "application/json",
-        "Authorization": get_api_key()
+        "Authorization": "Bearer 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"
     }
     data = {
         "prompt": prompt,
@@ -29,11 +28,7 @@ async def create_design(prompt):
             else:
                 return None
 
-def get_api_key():
-    with open("api-key.txt", "r") as f:
-        return f.read().strip()
-
-@app.route("/create-design", methods=["POST"])
+@app.post("/create-design")
 async def handle_create_design():
     try:
         data = await request.json
@@ -42,30 +37,30 @@ async def handle_create_design():
         if prompt:
             design_info = await create_design(prompt)
             if design_info:
-                return quart.jsonify(design_info)
+                return quart.Response(response=json.dumps(design_info), status=200)
             else:
-                return "Failed to create the design", 500
+                return quart.Response(response="Failed to create the design", status=500)
         else:
-            return "Invalid request payload", 400
+            return quart.Response(response="Invalid request payload", status=400)
     except Exception as e:
-        return f"Error occurred during API call: {str(e)}", 500
+        return quart.Response(response="Error occurred during API call: " + str(e), status=500)
 
-@app.route("/logo.png")
+@app.get("/logo.png")
 async def plugin_logo():
     filename = 'logo.png'
     return await quart.send_file(filename, mimetype='image/png')
 
-@app.route("/.well-known/ai-plugin.json")
+@app.get("/.well-known/ai-plugin.json")
 async def plugin_manifest():
     with open("./.well-known/ai-plugin.json") as f:
         text = f.read()
-        return text, {"Content-Type": "text/json"}
+        return quart.Response(text, mimetype="text/json")
 
-@app.route("/openapi.yaml")
+@app.get("/openapi.yaml")
 async def openapi_spec():
     with open("openapi.yaml") as f:
         text = f.read()
-        return text, {"Content-Type": "text/yaml"}
+        return quart.Response(text, mimetype="text/yaml")
 
 def main():
     app.run(debug=True, host="0.0.0.0", port=5003)
