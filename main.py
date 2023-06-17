@@ -4,16 +4,16 @@ import quart
 import quart_cors
 from quart import request
 
-app = quart_cors.cors(quart.Quart(__name__), allow_origin="https://chat.openai.com")
+app = quart_cors.cors(
+    quart.Quart(__name__),
+    allow_origin=["https://chat.openai.com", "https://try.hubcart.ai"]
+)
 
 async def create_design(prompt):
     url = "https://api.openai.com/v1/images/generations"
-    with open("api-key.txt") as f:
-        api_key = f.read().strip()
-
     headers = {
         "Content-Type": "application/json",
-        "Authorization": f"Bearer {api_key}"
+        "Authorization": get_api_key()
     }
     data = {
         "prompt": prompt,
@@ -30,6 +30,10 @@ async def create_design(prompt):
                 return {"image_url": image_url}
             else:
                 return None
+
+def get_api_key():
+    with open("api-key.txt", "r") as f:
+        return f.read().strip()
 
 @app.post("/create-design")
 async def handle_create_design():
