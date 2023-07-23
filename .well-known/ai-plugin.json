@@ -11,7 +11,7 @@
     "type": "openapi",
     "url": "https://try.hubcart.ai/openapi.yaml"
   },
-  "logo_url": "https://try.hubcart.ai/logo.png",
+  "logo_url": "https://raw.githubusercontent.com/hubcart/gpt-designer-plugin/main/logo.png",
   "contact_email": "cs@hubcart.ai",
   "legal_info_url": "https://try.hubcart.ai/legal"
 }
