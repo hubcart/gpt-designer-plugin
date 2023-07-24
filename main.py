@@ -67,6 +67,15 @@ async def openapi_spec():
         text = f.read()
         return quart.Response(text, mimetype="text/yaml")
 
+@app.get("/legal.html")
+async def serve_legal_html():
+    try:
+        with open("legal.html") as f:
+            text = f.read()
+            return quart.Response(text, mimetype="text/html")
+    except FileNotFoundError:
+        return quart.Response(response="Legal page not found", status=404)
+
 def main():
     app.run(debug=True, host="0.0.0.0", port=5003)
 
