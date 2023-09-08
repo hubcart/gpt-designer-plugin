@@ -6,26 +6,20 @@ from quart import request
 
 app = quart_cors.cors(quart.Quart(__name__), allow_origin="https://chat.openai.com")
 
-OPENAI_API_URL = "https://api.openai.com/v1/images/generations"
-
-async def create_design(prompt):
-    # Read the API key from api-key.txt file
-    with open("api-key.txt", "r") as f:
-        api_key = f.read().strip()
+hubcart_url = "https://members.app.hubcart.ai:7860/sdapi/v1/txt2img"
 
     headers = {
-        "Content-Type": "application/json",
-        "Authorization": f"Bearer {api_key}"
+        "Content-Type": "application/json"
     }
     data = {
         "prompt": prompt,
-        "n": 1,
-        "size": "256x256",
-        "response_format": "url"
+        "steps": 20,
+        "width": 512,
+        "height": 512
     }
 
     async with aiohttp.ClientSession() as session:
-        async with session.post(OPENAI_API_URL, headers=headers, json=data) as response:
+        async with session.post(hubcart_url, headers=headers, json=data) as response:
             if response.status == 200:
                 response_json = await response.json()
                 image_url = response_json["data"][0]["url"]
@@ -33,7 +27,7 @@ async def create_design(prompt):
             else:
                 return None
 
-@app.post("/images/generations")
+@app.post("/sdapi/v1/txt2img"")
 async def handle_image_generation():
     try:
         data = await request.json
@@ -46,7 +40,7 @@ async def handle_image_generation():
             else:
                 return quart.Response(response="Failed to create the design", status=500)
         else:
-            return quart.Response(response="Invalid request payload", status=400)
+            return quart.Response(response="No Prompt", status=400)
     except Exception as e:
         return quart.Response(response="Error occurred during API call: " + str(e), status=500)
 
